@@ -1,0 +1,21 @@
+import { ZodError } from 'zod';
+import { HttpError } from './httpError.js';
+
+export function errorHandler(err, _req, res, _next) {
+  // eslint-disable-next-line no-console
+  console.error(err);
+
+  if (err instanceof ZodError) {
+    return res.status(400).json({
+      message: 'Validation error',
+      issues: err.issues,
+    });
+  }
+
+  if (err instanceof HttpError) {
+    return res.status(err.status).json({ message: err.message });
+  }
+
+  return res.status(500).json({ message: 'Internal server error' });
+}
+
