@@ -3,7 +3,6 @@ import { HttpError } from './httpError.js';
 
 export function errorHandler(err, _req, res, _next) {
   // eslint-disable-next-line no-console
-  console.error(err);
 
   if (err instanceof ZodError) {
     return res.status(400).json({
