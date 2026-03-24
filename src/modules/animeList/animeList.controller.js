@@ -1,5 +1,5 @@
 import { HttpError } from '../../shared/httpError.js';
-import { addAnimeSchema, updateAnimeStatusSchema } from './animeList.schemas.js';
+import { addAnimeSchema, updateAnimeSchema } from './animeList.schemas.js';
 import * as animeListService from './animeList.service.js';
 
 function requireUserId(req) {
@@ -24,8 +24,15 @@ export async function add(req, res) {
 export async function update(req, res) {
   const userId = requireUserId(req);
   const { id } = req.params;
-  const { status } = updateAnimeStatusSchema.parse(req.body);
-  const updated = await animeListService.updateStatus(userId, id, status);
+
+  const data = updateAnimeSchema.parse(req.body);
+
+  if (Object.keys(data).length === 0) {
+    throw new HttpError(400, 'No fields to update');
+  }
+
+  const updated = await animeListService.update(userId, id, data);
+
   res.json(updated);
 }
 

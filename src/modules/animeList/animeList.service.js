@@ -23,16 +23,21 @@ export async function addForUser(userId, { animeId, title, image }) {
   }
 }
 
-export async function updateStatus(userId, itemId, status) {
-  if (!mongoose.isValidObjectId(itemId)) throw new HttpError(400, 'Invalid id');
+export async function update(userId, itemId, data) {
+  if (!mongoose.isValidObjectId(itemId)) {
+    throw new HttpError(400, 'Invalid id');
+  }
 
   const updated = await AnimeListItem.findOneAndUpdate(
     { _id: itemId, userId },
-    { $set: { status } },
+    { $set: data },
     { new: true }
   ).lean();
 
-  if (!updated) throw new HttpError(404, 'Anime list item not found');
+  if (!updated) {
+    throw new HttpError(404, 'Anime list item not found');
+  }
+
   return updated;
 }
 

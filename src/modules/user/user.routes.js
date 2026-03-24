@@ -11,7 +11,6 @@ router.get('/profile', requireAuth, asyncHandler(userController.profile));
 router.get('/anime-list', requireAuth, asyncHandler(animeListController.list));
 router.post('/anime-list', requireAuth, asyncHandler(animeListController.add));
 router.put('/anime-list/:id', requireAuth, asyncHandler(animeListController.update));
-router.put('/anime-list/update-chapter/:id', requireAuth, asyncHandler(animeListController.updateChapterPaused))
 router.delete('/anime-list/:id', requireAuth, asyncHandler(animeListController.remove));
 
 export default router;

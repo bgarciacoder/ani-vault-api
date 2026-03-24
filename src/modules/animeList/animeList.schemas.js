@@ -5,10 +5,11 @@ export const addAnimeSchema = z.object({
   animeId: z.number().int().positive(),
   title: z.string().min(1).max(300),
   image: z.string().url(),
-  chapterPaused: z.string()
 });
 
-export const updateAnimeStatusSchema = z.object({
-  status: z.enum(ANIME_STATUSES),
+export const updateAnimeSchema = z
+.object({
+  status: z.enum(ANIME_STATUSES).optional(),
+  chapterPaused: z.string().optional(),
 });
 
