@@ -2,32 +2,8 @@ import mongoose from 'mongoose';
 import { AnimeListItem } from './animeList.model.js';
 import { HttpError } from '../../shared/httpError.js';
 
-export async function listForUser(userId, page = 1, limit = 24) {
-  const safePage = Math.max(1, page);
-  const safeLimit = Math.min(100, Math.max(1, limit)); // cap para evitar abusos
-
-  const skip = (safePage - 1) * safeLimit;
-
-  const [items, total] = await Promise.all([
-    AnimeListItem.find({ userId })
-      .sort({ updatedAt: -1 })
-      .skip(skip)
-      .limit(safeLimit)
-      .lean(),
-    AnimeListItem.countDocuments({ userId })
-  ]);
-
-  // return {
-  //   data: items,
-  //   pagination: {
-  //     total,
-  //     page: safePage,
-  //     limit: safeLimit,
-  //     totalPages: Math.ceil(total / safeLimit)
-  //   }
-  // };
-
-  return items;
+export async function listForUser(userId) {
+  return AnimeListItem.find({ userId }).sort({ updatedAt: -1 }).lean();
 }
 
 export async function addForUser(userId, { animeId, title, image }) {
