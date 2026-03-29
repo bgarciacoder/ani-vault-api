@@ -10,7 +10,9 @@ function requireUserId(req) {
 
 export async function list(req, res) {
   const userId = requireUserId(req);
-  const items = await animeListService.listForUser(userId);
+  const page = req.query.page;
+  const status = req.query.status;
+  const items = await animeListService.listForUser(userId, page, status);
   res.json(items);
 }
 
