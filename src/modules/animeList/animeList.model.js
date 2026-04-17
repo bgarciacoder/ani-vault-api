@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const allowedStatuses = ['pendiente', 'visto', 'en pausa', 'cancelado'];
+const allowedStatuses = ['pendiente', 'visto', 'en pausa', 'cancelado', 'siguiendo'];
 
 const animeListSchema = new mongoose.Schema(
   {

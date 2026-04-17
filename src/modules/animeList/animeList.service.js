@@ -39,18 +39,27 @@ export async function listForUser(userId, page = 1, status) {
           },
           pendiente: {
             $sum: { $cond: [{ $eq: ["$status", "pendiente"] }, 1, 0] }
+          },
+          siguiendo: {
+            $sum: { $cond: [{ $eq: ["$status", "siguiendo"] }, 1, 0] }
           }
         }
       }
     ])
   ]);
 
-  const statusCounts = statusCountItems[0] || {
+  const defaultCounts = {
     visto: 0,
     enPausa: 0,
     cancelado: 0,
-    pendiente: 0
+    pendiente: 0,
+    siguiendo: 0
   };
+
+  const statusCounts = statusCountItems[0] ? {
+    ...defaultCounts,
+    ...statusCountItems[0]
+  } : defaultCounts;
 
   return {
     data: items,
