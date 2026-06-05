@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { AnimeListItem } from './animeList.model.js';
 import { HttpError } from '../../shared/httpError.js';
 
-export async function listForUser(userId, page = 1, status) {
+export async function listForUser(userId, page = 1, status, q) {
   // return AnimeListItem.find({ userId }).sort({ updatedAt: -1 }).lean();
   const limit = 24;
   const safePage = Math.max(1, page);
@@ -14,6 +14,10 @@ export async function listForUser(userId, page = 1, status) {
 
   if(status && status !== ""){
     query.status = status;
+  }
+
+  if(q && q.trim() !== ""){
+    query.title = { $regex: q.trim(), $options: 'i' };
   }
 
   const [items, total, statusCountItems] = await Promise.all([
@@ -127,4 +131,28 @@ export async function removeItem(userId, itemId) {
   if (!deleted) throw new HttpError(404, 'Anime list item not found');
   return deleted;
 }
+
+export async function searchByTitle(query, limit = 24) {
+  if (!query || query.trim().length === 0) return [];
+  
+  const searchQuery = query.trim();
+  const regex = new RegExp(searchQuery, 'i'); // case-insensitive search
+  
+  const results = await AnimeListItem.aggregate([
+    { $match: { title: { $regex: regex } } },
+    {
+      $group: {
+        _id: '$animeId',
+        title: { $first: '$title' },
+        image: { $first: '$image' },
+        count: { $sum: 1 }
+      }
+    },
+    { $sort: { count: -1, title: 1 } },
+    { $limit: limit }
+  ]);
+  
+  return results;
+}
+
 

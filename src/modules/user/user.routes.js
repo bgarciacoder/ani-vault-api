@@ -8,6 +8,7 @@ const router = Router();
 
 router.get('/profile', requireAuth, asyncHandler(userController.profile));
 
+router.get('/anime-list/search', requireAuth, asyncHandler(animeListController.search));
 router.get('/anime-list', requireAuth, asyncHandler(animeListController.list));
 router.post('/anime-list', requireAuth, asyncHandler(animeListController.add));
 router.put('/anime-list/:id', requireAuth, asyncHandler(animeListController.update));

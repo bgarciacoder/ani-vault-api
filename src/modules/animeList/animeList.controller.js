@@ -12,7 +12,8 @@ export async function list(req, res) {
   const userId = requireUserId(req);
   const page = req.query.page;
   const status = req.query.status;
-  const items = await animeListService.listForUser(userId, page, status);
+  const q = req.query.q;
+  const items = await animeListService.listForUser(userId, page, status, q);
   res.json(items);
 }
 
@@ -52,4 +53,14 @@ export async function remove(req, res) {
   await animeListService.removeItem(userId, id);
   res.status(204).send();
 }
+
+export async function search(req, res) {
+  const { q } = req.query;
+  if (!q) {
+    return res.json([]);
+  }
+  const results = await animeListService.searchByTitle(q);
+  res.json(results);
+}
+
 
